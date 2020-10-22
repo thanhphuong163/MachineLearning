@@ -55,7 +55,7 @@ if __name__ == "__main__":
     # kmean = k_mean.Kmean(num_clusters=3, num_iters=4)
     # X_kmean, loss = kmean(X[:,:-1])
     # plot_comparison(X, X_kmean)
-    x = np.array([3,2])
+    X = np.random.randn(10,2)
     pis = np.array([0.5,0.3,0.2])
     means = np.array([[0,0],[1,1],[4,2]])
     covs = np.array([
@@ -64,4 +64,4 @@ if __name__ == "__main__":
         [[1, 0], [0, 2]]
         ])
     em_model = em.EM()
-    print(em_model.test(x,1,pis,means,covs))
+    print(em_model.test(X,pis,means,covs))
