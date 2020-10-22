@@ -31,6 +31,17 @@ def plotGaussMix(X):
     plt.legend()
     plt.show()
 
+def plot_comparison(*args):
+    lst_X = [X for X in args]
+    fig, axs = plt.subplots(nrows=int(len(lst_X)/2), ncols=2, figsize=(14, 7*int(len(lst_X)/2)))
+    for i, X in enumerate(lst_X):
+        labels = np.unique(X[:,-1])
+        for label in labels:
+            data = X[X[:,-1] == label]
+            axs[int(i/2),i%2].scatter(data[:,0], data[:,1], label=f'Cluster {int(label)}')
+        axs[int(i/2), i % 2].legend()
+    plt.show()
+
 if __name__ == "__main__":
     n = 300
     p = np.array([.5, .3, .2])
@@ -39,7 +50,5 @@ if __name__ == "__main__":
     X = genGaussMix(n=n, p=p, loc=loc, scale=scale)
     # plotGaussMix(X)
     kmean = k_mean.Kmean(num_clusters=3, num_iters=4)
-    data, loss = kmean(X[:,:-1])
-    # print(data)
-    print(loss)
-    plotGaussMix(data)
+    X_kmean, loss = kmean(X[:,:-1])
+    plot_comparison(X, X_kmean)
