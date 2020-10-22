@@ -1,7 +1,10 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy.linalg as la
 from models.k_mean import k_mean
+from models.em import em
+from utils.functions import gauss_func
 
 
 def genGauss(n=100, loc=np.array([0, 0]), scale=np.array([1, 1])):
@@ -43,12 +46,22 @@ def plot_comparison(*args):
     plt.show()
 
 if __name__ == "__main__":
-    n = 300
-    p = np.array([.5, .3, .2])
-    loc = np.array([[-2, -1], [2, 5], [3, -2]])
-    scale = np.array([[2, 2], [1, 1], [1, 3]])
-    X = genGaussMix(n=n, p=p, loc=loc, scale=scale)
-    # plotGaussMix(X)
-    kmean = k_mean.Kmean(num_clusters=3, num_iters=4)
-    X_kmean, loss = kmean(X[:,:-1])
-    plot_comparison(X, X_kmean)
+    # n = 300
+    # p = np.array([.5, .3, .2])
+    # loc = np.array([[-2, -1], [2, 5], [3, -2]])
+    # scale = np.array([[2, 2], [1, 1], [1, 3]])
+    # X = genGaussMix(n=n, p=p, loc=loc, scale=scale)
+    # # plotGaussMix(X)
+    # kmean = k_mean.Kmean(num_clusters=3, num_iters=4)
+    # X_kmean, loss = kmean(X[:,:-1])
+    # plot_comparison(X, X_kmean)
+    x = np.array([3,2])
+    pis = np.array([0.5,0.3,0.2])
+    means = np.array([[0,0],[1,1],[4,2]])
+    covs = np.array([
+        [[1, 0], [0, 1]],
+        [[3, 0], [0, 2]],
+        [[1, 0], [0, 2]]
+        ])
+    em_model = em.EM()
+    print(em_model.test(x,1,pis,means,covs))
