@@ -16,3 +16,12 @@ def z_nk(x_n, pi_k, mean_k, cov_k):
     Probability of the n^th instance belong to cluster k^th
     '''
     return pi_k * gauss_func(x_n, mean_k, cov_k)
+
+def my_square(n):
+    return n*n
+
+def my_pow(n,e):
+    ans = 1
+    for i in range(e):
+        ans *= n
+    return ans

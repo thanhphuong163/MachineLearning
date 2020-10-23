@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import numpy.linalg as la
 from models.k_mean import k_mean
 from models.em import em
-from utils.functions import gauss_func
 
 
 def genGauss(n=100, loc=np.array([0, 0]), scale=np.array([1, 1])):
@@ -45,7 +44,7 @@ def plot_comparison(*args):
         axs[int(i/2), i % 2].legend()
     plt.show()
 
-if __name__ == "__main__":
+def run_models():
     n = 300
     p = np.array([.5, .3, .2])
     loc = np.array([[-2, -1], [2, 5], [3, -2]])
@@ -53,7 +52,10 @@ if __name__ == "__main__":
     X = genGaussMix(n=n, p=p, loc=loc, scale=scale)
     # # plotGaussMix(X)
     kmean = k_mean.Kmean(num_clusters=3, num_iters=4)
-    X_kmean = kmean(X[:,:-1])
+    X_kmean = kmean(X[:, :-1])
     em_model = em.EM(num_clusters=3, num_iters=20, verbose=False)
-    X_em = em_model(X[:,:-1])
+    X_em = em_model(X[:, :-1])
     plot_comparison(X, X_kmean, X_em)
+
+if __name__ == "__main__":
+    run_models()

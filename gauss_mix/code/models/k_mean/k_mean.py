@@ -10,7 +10,7 @@ class Kmean(object):
         """
         Assign x to the closest cluster
         """
-        for x in enumerate(X):
+        for i,x in enumerate(X):
             X[i,-1] = np.argmax(np.sum((x[:-1].reshape((1, x.shape[0]-1)) - clusters)**2, axis=1)) + 1
         return X
     
@@ -35,7 +35,7 @@ class Kmean(object):
         means = X[np.random.choice(X.shape[0], self.num_clusters, replace=False), :]
         self.lst_loss = list()
         labels = np.zeros((X.shape[0], 1))
-        X = np.concatenate((X, labels), axis=1)
+        X = np.concatenate([X, labels], axis=1)
         for i in range(self.num_iters):
             X = self.assign_cluster(X, means)
             self.lst_loss.append(self.loss(X, means))

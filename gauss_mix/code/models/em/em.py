@@ -12,6 +12,7 @@ class EM(object):
     def calc_responsibities(X:np.array, pis:np.array, means:np.array, covs:np.array):
         '''
         gamma(z_nk): eq. (9.16), page 435, Pattern Recognitions and Machine Learning
+        This is the posterior distribution
         '''
         Z = np.zeros((X.shape[0], means.shape[0]))
         for n, x_n in enumerate(X):
