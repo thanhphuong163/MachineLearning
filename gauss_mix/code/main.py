@@ -36,7 +36,7 @@ def plotGaussMix(X):
 
 def plot_comparison(*args):
     lst_X = [X for X in args]
-    fig, axs = plt.subplots(nrows=int(len(lst_X)/2), ncols=2, figsize=(14, 7*int(len(lst_X)/2)))
+    fig, axs = plt.subplots(nrows=np.round(len(lst_X)/2).astype(int), ncols=2, figsize=(10, 5*np.round(len(lst_X)/2).astype(int)))
     for i, X in enumerate(lst_X):
         labels = np.unique(X[:,-1])
         for label in labels:
@@ -52,17 +52,8 @@ if __name__ == "__main__":
     scale = np.array([[2, 2], [1, 1], [1, 3]])
     X = genGaussMix(n=n, p=p, loc=loc, scale=scale)
     # # plotGaussMix(X)
-    # kmean = k_mean.Kmean(num_clusters=3, num_iters=4)
-    # X_kmean, loss = kmean(X[:,:-1])
-    # plot_comparison(X, X_kmean)
-    # X = np.random.randn(10,2)
-    # pis = np.array([0.5,0.3,0.2])
-    # means = np.array([[0,0],[1,1],[4,2]])
-    # covs = np.array([
-    #     [[1, 0], [0, 1]],
-    #     [[3, 0], [0, 2]],
-    #     [[1, 0], [0, 2]]
-    #     ])
-    em_model = em.EM(num_clusters=3, num_iters=20, verbose=True)
-    data, labels = em_model(X[:,:-1])
-    plotGaussMix(np.concatenate([data,labels.reshape((-1,1))], axis=1))
+    kmean = k_mean.Kmean(num_clusters=3, num_iters=4)
+    X_kmean = kmean(X[:,:-1])
+    em_model = em.EM(num_clusters=3, num_iters=20, verbose=False)
+    X_em = em_model(X[:,:-1])
+    plot_comparison(X, X_kmean, X_em)

@@ -66,7 +66,7 @@ class EM(object):
         covs = np.array([np.diag([1,1]) for i in range(self.num_clusters)])
         pis = np.array([1/self.num_clusters for i in range(self.num_clusters)])
         labels = None
-        hist_log_likelihood = [self.calc_log_likelihood(X, pis, means, covs)]
+        self.hist_log_likelihood = [self.calc_log_likelihood(X, pis, means, covs)]
         # EM algorithm
         for i in range(self.num_iters):
             # E step
@@ -81,12 +81,12 @@ class EM(object):
             log_likelihood = self.calc_log_likelihood(X, pis, means, covs)
             if self.verbose:
                 print(f"Epoch #{i+1}: Log likelihood = {log_likelihood}")
-            hist_log_likelihood.append(log_likelihood)
+            self.hist_log_likelihood.append(log_likelihood)
         if self.verbose:
             print("Means:\n", means)
             print("Covs:\n", covs)
             print("Pis:\n", pis)
-        return X, labels
+        return np.concatenate([X, labels.reshape((-1,1))], axis=1)
 
     def test(self, X, pis, means, covs):
         Z = self.calc_likelihood(X, pis, means, covs)

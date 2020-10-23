@@ -40,11 +40,11 @@ class Kmean(object):
 
     def __call__(self, X:np.array):
         means = X[np.random.choice(X.shape[0], self.num_clusters, replace=False), :]
-        lst_loss = list()
+        self.lst_loss = list()
         labels = np.zeros((X.shape[0], 1))
         X = np.concatenate((X, labels), axis=1)
         for i in range(self.num_iters):
             X = self.assign_cluster(X, means)
-            lst_loss.append(self.loss(X, means))
+            self.lst_loss.append(self.loss(X, means))
             means = self.update_cluster(X)
-        return X, lst_loss
+        return X
