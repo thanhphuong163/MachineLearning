@@ -3,9 +3,10 @@ from utils.functions import gauss_func
 
 
 class EM(object):
-    def __init__(self, num_clusters=2, num_iters=10):
+    def __init__(self, num_clusters=2, num_iters=10, verbose=False):
         self.num_clusters = num_clusters
         self.num_iters = num_iters
+        self.verbose = verbose
 
     @staticmethod
     def gamma_z_nk(x_n, k, pi, mean, cov):
@@ -24,12 +25,12 @@ class EM(object):
         for n, x_n in enumerate(X):
             probs = np.array([pi_j * gauss_func(x_n, mean_j, cov_j)
                             for pi_j, mean_j, cov_j in zip(pis, means, covs)])
-            Z[n,:] = probs / np.sum(probs)
+            Z[n,:] = probs.reshape((-1,)) / np.sum(probs)
         return Z
 
     @staticmethod
     def update_mean(X:np.array, Z:np.array):
-        N_k = Z.sum(axis=0)
+        N_k = Z.sum(axis=0).reshape((-1,1))
         return (Z.T @ X) / N_k
 
     @staticmethod
@@ -48,7 +49,7 @@ class EM(object):
     @staticmethod
     def update_pi(Z:np.array):
         N = Z.shape[0]
-        N_k = Z.sum(axis=0)
+        N_k = Z.sum(axis=0).reshape((-1, 1))
         return N_k / N
 
     @staticmethod
@@ -63,9 +64,9 @@ class EM(object):
         # Initialize
         means = X[np.random.choice(X.shape[0], self.num_clusters, replace=False), :]
         covs = np.array([np.diag([1,1]) for i in range(self.num_clusters)])
-        pis = np.array([1/self.num_clusters for i in self.num_clusters])
+        pis = np.array([1/self.num_clusters for i in range(self.num_clusters)])
         labels = None
-        
+        hist_log_likelihood = [self.calc_log_likelihood(X, pis, means, covs)]
         # EM algorithm
         for i in range(self.num_iters):
             # E step
@@ -75,8 +76,16 @@ class EM(object):
             covs = self.update_cov(X, Z, means)
             pis = self.update_pi(Z)
             # Assign cluster
-            labels = Z.argmax(axis=1)
-        
+            labels = Z.argmax(axis=1) + 1
+            # Evaluate Log Likelihood
+            log_likelihood = self.calc_log_likelihood(X, pis, means, covs)
+            if self.verbose:
+                print(f"Epoch #{i+1}: Log likelihood = {log_likelihood}")
+            hist_log_likelihood.append(log_likelihood)
+        if self.verbose:
+            print("Means:\n", means)
+            print("Covs:\n", covs)
+            print("Pis:\n", pis)
         return X, labels
 
     def test(self, X, pis, means, covs):

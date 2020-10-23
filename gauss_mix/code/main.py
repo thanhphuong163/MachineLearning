@@ -46,22 +46,23 @@ def plot_comparison(*args):
     plt.show()
 
 if __name__ == "__main__":
-    # n = 300
-    # p = np.array([.5, .3, .2])
-    # loc = np.array([[-2, -1], [2, 5], [3, -2]])
-    # scale = np.array([[2, 2], [1, 1], [1, 3]])
-    # X = genGaussMix(n=n, p=p, loc=loc, scale=scale)
+    n = 300
+    p = np.array([.5, .3, .2])
+    loc = np.array([[-2, -1], [2, 5], [3, -2]])
+    scale = np.array([[2, 2], [1, 1], [1, 3]])
+    X = genGaussMix(n=n, p=p, loc=loc, scale=scale)
     # # plotGaussMix(X)
     # kmean = k_mean.Kmean(num_clusters=3, num_iters=4)
     # X_kmean, loss = kmean(X[:,:-1])
     # plot_comparison(X, X_kmean)
-    X = np.random.randn(10,2)
-    pis = np.array([0.5,0.3,0.2])
-    means = np.array([[0,0],[1,1],[4,2]])
-    covs = np.array([
-        [[1, 0], [0, 1]],
-        [[3, 0], [0, 2]],
-        [[1, 0], [0, 2]]
-        ])
-    em_model = em.EM()
-    print(em_model.test(X,pis,means,covs))
+    # X = np.random.randn(10,2)
+    # pis = np.array([0.5,0.3,0.2])
+    # means = np.array([[0,0],[1,1],[4,2]])
+    # covs = np.array([
+    #     [[1, 0], [0, 1]],
+    #     [[3, 0], [0, 2]],
+    #     [[1, 0], [0, 2]]
+    #     ])
+    em_model = em.EM(num_clusters=3, num_iters=20, verbose=True)
+    data, labels = em_model(X[:,:-1])
+    plotGaussMix(np.concatenate([data,labels.reshape((-1,1))], axis=1))
