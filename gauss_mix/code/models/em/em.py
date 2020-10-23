@@ -9,14 +9,6 @@ class EM(object):
         self.verbose = verbose
 
     @staticmethod
-    def gamma_z_nk(x_n, k, pi, mean, cov):
-        '''
-        Responsibility: posterior probability that x_n is of the k^th component
-        '''
-        probs = np.array([pi_j * gauss_func(x_n,mean_j,cov_j) for pi_j,mean_j,cov_j in zip(pi,mean,cov)])
-        return probs[k] / np.sum(probs)
-
-    @staticmethod
     def calc_responsibities(X:np.array, pis:np.array, means:np.array, covs:np.array):
         '''
         gamma(z_nk): eq. (9.16), page 435, Pattern Recognitions and Machine Learning

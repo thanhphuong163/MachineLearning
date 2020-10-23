@@ -6,18 +6,11 @@ class Kmean(object):
         self.num_iters = num_iters
 
     @staticmethod
-    def calc_distance(x1, x2):
-        '''
-        Calculate Euclide's distance between two points
-        '''
-        return np.sqrt(np.sum((x1-x2)**2))
-
-    @staticmethod
     def assign_cluster(X:np.array, clusters:np.array):
-        '''
-        The point x will be assigned to the closest cluster
-        '''
-        for i, x in enumerate(X):
+        """
+        Assign x to the closest cluster
+        """
+        for x in enumerate(X):
             X[i,-1] = np.argmax(np.sum((x[:-1].reshape((1, x.shape[0]-1)) - clusters)**2, axis=1)) + 1
         return X
     
