@@ -47,9 +47,6 @@ class EM(object):
 
     @staticmethod
     def calc_log_likelihood(X:np.array, pis:np.array, means:np.array, covs:np.array):
-        '''
-        This is for log likelihood evaluation
-        '''
         log_likelihood = 0
         for x_n in X:
             log_likelihood += np.log(np.sum([pi_j * gauss_func(x_n, mean_j, cov_j)
