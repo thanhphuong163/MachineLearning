@@ -48,7 +48,7 @@ class EM(object):
     @staticmethod
     def calc_log_likelihood(X:np.array, pis:np.array, means:np.array, covs:np.array):
         '''
-        To evaluate the convergence of learning algorithm
+        To calculate log likelihood
         '''
         log_likelihood = 0
         for x_n in X:
