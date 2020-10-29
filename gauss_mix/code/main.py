@@ -6,7 +6,10 @@ from models.k_mean import k_mean
 from models.em import em
 
 
-def genGauss(n=100, loc=np.array([0, 0]), scale=np.array([1, 1])):
+def genGauss(
+        n=100, 
+        loc=np.array([0, 0]), 
+        scale=np.array([1, 1])):
     dim = loc.shape[0]
     X = np.random.normal(loc=loc, scale=scale, size=(n, dim))
     return X
