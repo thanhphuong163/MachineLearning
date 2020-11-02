@@ -1,7 +1,6 @@
 import numpy as np
 from utils.functions import gauss_func
 
-
 class EM(object):
     def __init__(self, num_clusters=2, num_iters=10, verbose=False):
         self.num_clusters = num_clusters
