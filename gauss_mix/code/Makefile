@@ -1,3 +1,5 @@
+.PHONY: run test
+
 test_modules = tests.test_functions
 
 run:

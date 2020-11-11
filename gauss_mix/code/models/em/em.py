@@ -75,12 +75,12 @@ class EM(object):
             # Evaluate Log Likelihood
             log_likelihood = self.calc_log_likelihood(X, pis, means, covs)
             if self.verbose:
-                print(f"Epoch #{i+1}: Log likelihood = {log_likelihood}")
+                print(f"Epoch #{i+1}: Log likelihood = {log_likelihood:.4}")
             self.hist_log_likelihood.append(log_likelihood)
         if self.verbose:
             print("Means:\n", means)
             print("Covs:\n", covs)
-            print("Pis:\n", pis)
+            print("Weights:\n", pis)
         return np.concatenate([X, labels.reshape((-1,1))], axis=1)
 
     def test(self, X, pis, means, covs):

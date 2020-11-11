@@ -1,9 +1,10 @@
 import numpy as np
 
 class Kmean(object):
-    def __init__(self, num_clusters=2, num_iters=10):
+    def __init__(self, num_clusters=2, num_iters=10, verbose=False):
         self.num_clusters = num_clusters
         self.num_iters = num_iters
+        self.verbose = verbose
 
     @staticmethod
     def assign_cluster(X:np.array, clusters:np.array):
@@ -40,4 +41,6 @@ class Kmean(object):
             X = self.assign_cluster(X, means)
             self.lst_loss.append(self.loss(X, means))
             means = self.update_cluster(X)
+            if self.verbose:
+                print(f"Iterator #{i+1}: loss = {self.lst_loss[-1]:.4}")
         return X
