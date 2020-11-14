@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 class Dense(nn.Module):
@@ -29,7 +30,6 @@ class NeuralNetwork(nn.Module):
         super(NeuralNetwork, self).__init__()
         
         layers = []
-        # TODO : define layers for neural network
         in_out_act = zip(layers_specs[:-1],
                         layers_specs[1:],
                         layers_activations)
@@ -39,9 +39,51 @@ class NeuralNetwork(nn.Module):
         self.model = nn.Sequential(*layers)
 
     def forward(self, X):
-        # TODO : tell network how data can be forwarded
         y = self.model(X)
         return y
+
+
+# Default networks for GaussianNet
+COMMON_NET_DEFAULT = {
+    "layers_specs": [2,3,1],
+    "layers_activations": ['relu', 'relu'],
+    "bias": False
+}
+MEAN_NET_DEFAULT = {
+    "layers_specs": [2,3,1],
+    "layers_activations": ['relu', None],
+    "bias": False
+}
+VAR_NET_DEFAULT = {
+    "layers_specs": [2,3,1],
+    "layers_activations": ['relu', None],
+    "bias": False
+}
+
+
+class GaussianNet(nn.Module):
+    def __init__(self, common_net=COMMON_NET_DEFAULT,
+                 mean_net=MEAN_NET_DEFAULT,
+                 var_net=VAR_NET_DEFAULT):
+        super(GaussianNet, self).__init__()
+        self.common_net = NeuralNetwork(**common_net)
+        self.mean_net = NeuralNetwork(**mean_net)
+        self.var_net = NeuralNetwork(**var_net)
+
+    def reparameterize(self, mu, var):
+        assert torch.all(var >= 0), "Variance must be non-negative"
+        std = torch.sqrt(var + 1e-10)
+        epsilon = torch.randn_like(std)
+        z = mu + std * epsilon
+        return z
+    
+    def forward(self, X):
+        y = self.common_net(X)
+        mean = self.mean_net(y)
+        var = F.softplus(self.var_net(y))
+        z = self.reparameterize(mean, var)
+        return mean, var, z
+
 
 class InferenceNet(nn.Module):
     def __init__(self, 
@@ -50,6 +92,8 @@ class InferenceNet(nn.Module):
                 log_var_net: dict):
         super(InferenceNet, self).__init__()
         # TODO : declare inference networks here, including gauss_net, gumbel_net, stick_breaking_net
+        
+
 
 class GenerativeNet(nn.Module):
     def __init__(self):
