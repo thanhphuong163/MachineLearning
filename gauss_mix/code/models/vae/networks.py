@@ -24,20 +24,35 @@ class Dense(nn.Module):
 class NeuralNetwork(nn.Module):
     def __init__(self,
                 layers_specs=[2,3,1],
-                layers_activations=['relu','relu']):
+                layers_activations=['relu','relu'],
+                bias=True):
         super(NeuralNetwork, self).__init__()
         
         layers = []
         # TODO : define layers for neural network
+        in_out_act = zip(layers_specs[:-1],
+                        layers_specs[1:],
+                        layers_activations)
+        for in_, out_, act_ in in_out_act:
+            layers.append(Dense(in_, out_, bias=bias, activation=act_))
+        
+        self.model = nn.Sequential(*layers)
 
     def forward(self, X):
         # TODO : tell network how data can be forwarded
-        return 0
+        y = self.model(X)
+        return y
 
-class InferNet(nn.Module):
+class InferenceNet(nn.Module):
     def __init__(self, 
                 common_net: dict,
                 mean_net: dict,
                 log_var_net: dict):
-        super(InferNet, self).__init__()
+        super(InferenceNet, self).__init__()
         # TODO : declare inference networks here, including gauss_net, gumbel_net, stick_breaking_net
+
+class GenerativeNet(nn.Module):
+    def __init__(self):
+        super(GenerativeNet, self).__init__()
+        # TODO : declare generative networks here, including gauss_net, gumbel_net, stick_breaking_net
+
