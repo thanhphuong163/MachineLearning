@@ -62,9 +62,10 @@ VAR_NET_DEFAULT = {
 
 
 class GaussianNet(nn.Module):
-    def __init__(self, common_net=COMMON_NET_DEFAULT,
-                 mean_net=MEAN_NET_DEFAULT,
-                 var_net=VAR_NET_DEFAULT):
+    def __init__(self,
+                common_net=COMMON_NET_DEFAULT,
+                mean_net=MEAN_NET_DEFAULT,
+                var_net=VAR_NET_DEFAULT):
         super(GaussianNet, self).__init__()
         self.common_net = NeuralNetwork(**common_net)
         self.mean_net = NeuralNetwork(**mean_net)
@@ -85,14 +86,61 @@ class GaussianNet(nn.Module):
         return mean, var, z
 
 
+class GumbelSoftmax(nn.Module):
+    def __init__(self, f_dim, c_dim):
+        super(GumbelSoftmax, self).__init__()
+        # TODO: define GumbelSoftmax
+        self.logits = nn.Linear(f_dim, c_dim)
+        self.f_dim = f_dim
+        self.c_dim = c_dim
+
+    def sample_gumbel(self, shape, eps=1e-20):
+        u = torch.rand(shape)
+        return -torch.log(-torch.log(u + eps) + eps)
+
+    def gumbel_softmax_sample(self, logits, temperature):
+        y = logits + self.sample_gumbel(logits.shape)
+        return F.softmax(y/temperature)
+
+    def gumbel_softmax(self):
+        pass
+
+    def forward(self, X):
+        # TODO: define dataflow in GumbelSoftmax
+        return 0
+
+
+class StickBreakingNet(nn.Module):
+    def __init__(self):
+        super(StickBreakingNet, self).__init__()
+        # TODO: define StickBreakingNet
+
+    def forward(self, X):
+        # TODO: define dataflow in StickBreakingNet
+        return 0
+
+
+# default networks for InferenceNet
+GAUSSIAN_NET_DEFAULT = {
+    'common_net': COMMON_NET_DEFAULT,
+    'mean_net': MEAN_NET_DEFAULT,
+    'var_net': VAR_NET_DEFAULT
+}
+GUMBEL_NET_DEFAULT = {}
+STICK_BREAKING_NET_DEFAULT = {}
+
+
 class InferenceNet(nn.Module):
     def __init__(self, 
-                common_net: dict,
-                mean_net: dict,
-                log_var_net: dict):
+                gaussian_net=GAUSSIAN_NET_DEFAULT,
+                gumbel_net=GUMBEL_NET_DEFAULT,
+                stick_breaking_net=STICK_BREAKING_NET_DEFAULT):
         super(InferenceNet, self).__init__()
         # TODO : declare inference networks here, including gauss_net, gumbel_net, stick_breaking_net
         
+    def forward(self, X):
+        # TODO: define dataflow inside InferenceNet
+        return 0
 
 
 class GenerativeNet(nn.Module):
@@ -100,3 +148,6 @@ class GenerativeNet(nn.Module):
         super(GenerativeNet, self).__init__()
         # TODO : declare generative networks here, including gauss_net, gumbel_net, stick_breaking_net
 
+    def forward(self, X):
+        # TODO: define dataflow inside GenerativeNet
+        return 0
