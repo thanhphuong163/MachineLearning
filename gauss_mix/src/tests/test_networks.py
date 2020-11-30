@@ -2,7 +2,7 @@ import unittest
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from models.vae.networks import Dense, NeuralNetwork, GaussianNet, StaticDense
+from models.vae.networks import Dense, NeuralNetwork, GaussianNet 
 
 class TestNetworks(unittest.TestCase):
     def setUp(self):

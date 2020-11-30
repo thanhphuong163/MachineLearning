@@ -102,12 +102,12 @@ class GumbelSoftmax(nn.Module):
         y = logits + self.sample_gumbel(logits.shape)
         return F.softmax(y/temperature)
 
-    def gumbel_softmax(self):
-        pass
-
     def forward(self, X):
         # TODO: define dataflow in GumbelSoftmax
-        return 0
+        logits = self.logits(X)
+        y = self.gumbel_softmax_sample(logits, temperature)
+
+        return y
 
 
 class StickBreakingNet(nn.Module):
