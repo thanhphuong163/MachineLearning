@@ -2,7 +2,7 @@ import unittest
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from models.vae.networks import Dense, NeuralNetwork, GaussianNet 
+from models.vae.networks import Dense, NeuralNetwork, GaussianNet, GumbelSoftmax 
 
 class TestNetworks(unittest.TestCase):
     def setUp(self):
@@ -55,7 +55,49 @@ class TestNetworks(unittest.TestCase):
         # for param in params:
             # print(f"\n{param}")
         mean, var, z = gauss_net(self.x)
-        print(f"Mean:\n{mean}")
-        print(f"Variance:\n{var}")
-        print(f"z:\n{z}")
+        # print(f"Mean:\n{mean}")
+        # print(f"Variance:\n{var}")
+        # print(f"z:\n{z}")
         self.assertEqual(True, True, "Should be equal")
+
+    def test_gumbel_softmax(self):
+        net = {
+            'layers_specs': [2,3,2],
+            'layers_activations': ['relu', None],
+            'bias': False
+        }
+        gumbel_net = GumbelSoftmax(net=net)
+        Y = gumbel_net(self.x)
+        print(f"Y:\n{Y}")
+        self.assertEqual(True, True)
+
+    def test_gumbel_softmax_hard(self):
+        net = {
+            'layers_specs': [2,3,2],
+            'layers_activations': ['relu', None],
+            'bias': False
+        }
+        gumbel_net = GumbelSoftmax(net=net, hard=True)
+        Y = gumbel_net(self.x)
+        print(f"Y:\n{Y}")
+        self.assertEqual(True, True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        

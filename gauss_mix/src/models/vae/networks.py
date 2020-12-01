@@ -85,14 +85,19 @@ class GaussianNet(nn.Module):
         z = self.reparameterize(mean, var)
         return mean, var, z
 
+# Default net for gumbel softmax
+NET_DEFAULT = {
+"layers_specs": [2,3,1],
+"layers_activations": ['relu', None],
+"bias": False
+}
 
 class GumbelSoftmax(nn.Module):
-    def __init__(self, f_dim, c_dim):
+    def __init__(self, net=NET_DEFAULT, temperature=1e-2, hard=False):
         super(GumbelSoftmax, self).__init__()
-        # TODO: define GumbelSoftmax
-        self.logits = nn.Linear(f_dim, c_dim)
-        self.f_dim = f_dim
-        self.c_dim = c_dim
+        self.net = NeuralNetwork(**net)
+        self.temperature = temperature
+        self.hard = hard
 
     def sample_gumbel(self, shape, eps=1e-20):
         u = torch.rand(shape)
@@ -100,20 +105,25 @@ class GumbelSoftmax(nn.Module):
 
     def gumbel_softmax_sample(self, logits, temperature):
         y = logits + self.sample_gumbel(logits.shape)
-        return F.softmax(y/temperature)
+        return F.softmax(y/temperature, dim=1)
 
     def forward(self, X):
-        # TODO: define dataflow in GumbelSoftmax
-        logits = self.logits(X)
-        y = self.gumbel_softmax_sample(logits, temperature)
-
+        logits = self.net(X)
+        y = self.gumbel_softmax_sample(logits, self.temperature)
+        if self.hard:
+            indx = torch.argmax(y, axis=-1)
+            y_hard = torch.zeros_like(y, dtype=int)
+            y_hard.scatter_(-1, indx.reshape(-1,1), 1)
+            return y_hard
         return y
 
 
 class StickBreakingNet(nn.Module):
-    def __init__(self):
+    def __init__(self, nb_stick, net=NET_DEFAULT):
         super(StickBreakingNet, self).__init__()
         # TODO: define StickBreakingNet
+        self.net = NeuralNetwork(**net)
+        self.nb_stick = nb_stick
 
     def forward(self, X):
         # TODO: define dataflow in StickBreakingNet
