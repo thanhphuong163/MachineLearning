@@ -82,7 +82,12 @@ class TestNetworks(unittest.TestCase):
         print(f"Y:\n{Y}")
         self.assertEqual(True, True)
 
-
+    def test_infer_net(self):
+        net = {
+            'layers_specs': [2,3,2],
+            'layers_activations': ['relu', None],
+            'bias': False
+        }
 
 
 
